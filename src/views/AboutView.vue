@@ -1,6 +1,5 @@
 <template>
     <div class="about">
-        <!-- <h1>This is an about page</h1> -->
         <table>
           <thead>
             <td><input type="checkbox" @change="checkAll"  />全选</td>
@@ -29,7 +28,7 @@ interface IUser {
 }
 let checkedList = reactive<number[]>([])
 let arrs = reactive<IUser[]>([]);
-// for (let i = 0; i < 100; i++) {
+// for (let i = 0; i < 3000; i++) {
 //     arrs.push({
 //         id: i,
 //         name: `大伟${i}`,
@@ -37,6 +36,9 @@ let arrs = reactive<IUser[]>([]);
 //         age: Math.floor(Math.random() * 18)
 //     });
 // }
+
+
+
 let index = 0;
 function sliceTask() {
   requestAnimationFrame(() => {
@@ -86,3 +88,5 @@ function checkAll() {
     }
 }
 </style>
+
+ 
