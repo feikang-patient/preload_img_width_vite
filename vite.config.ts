@@ -24,6 +24,9 @@ export default defineConfig({
             replacement: fileURLToPath(new URL('./src/components', import.meta.url))
         }
     },
+    server: {
+        port: 8081
+    },
     build: {
         // outDir: 'dist',
         // emptyOutDir: true,

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>body</title>
+        <script>
+            // 已经执行完成了 所以监听不到
+            window.addEventListener(
+                "error",
+                function (e) {
+                    console.log("error");
+                },
+                true,
+            );
+        </script>
+        <!-- // 标签是的error 不会 冒泡，所以可以监听到 -->
+        <script  src="./a.js"></script>
+        <script
+            src="https://cnd/npm/echarts@5.4.3/dist/echarts.min.js"
+        ></script>
+        <script src="./b.js"></script>
+        <script src="./c.js"></script>
+    </head>
+    <body>
+    </body>
+</html>

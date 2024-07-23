@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 import { userPermissionsStore } from '../stores/index';
 import { storeToRefs } from 'pinia';
 import HomeView from '../views/HomeView.vue';
@@ -52,7 +53,6 @@ const router = createRouter({
         }
     ]
 });
-
 // 添加路由前置守卫
 router.beforeEach((to, from, next) => {
     const store = userPermissionsStore();

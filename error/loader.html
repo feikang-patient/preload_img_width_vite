@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>body</title>
+        <script>
+            const domains = [
+                "public/b.js",
+                "public/b2.js",
+                "public/b3.js",
+                "public/b4.js",
+            ];
+            let retry = {};
+            let key = "";
+            // 已经执行完成了 所以监听不到
+            window.addEventListener(
+                "error",
+                function (e) {
+                    // console.log(e instanceof ErrorEvent);
+                    if (e.target.tagName === "SCRIPT") {
+                        const url = new URL(e.target.src);
+                        console.log("url:", url);
+                        console.log("pathname:", url.pathname);
+                        if (!(key in retry)) {
+                            retry[key] = 0;
+                        }
+                        const index = retry[key];
+                        if (index >= domains.length) {
+                            return;
+                        }
+                        const domain = domains[index];
+
+                        url.pathname = domain;
+                        console.log(url.toString());
+                        const script = document.createElement("script");
+                        script.src = url.toString();
+                        document.head.insertBefore(script, e.target);
+                        retry[key]++;
+                    }
+                },
+                true,
+            );
+
+            // 标签是的error 不会 冒泡，所以可以监听到
+        </script>
+        <script src="./a.js"></script>
+        <script src="./b1.js"></script>
+        <script src="./c.js"></script>
+    </head>
+    <body>
+        <script>
+            // 已经执行完成了 所以监听不到
+            // window.addEventListener('error', function() {
+            // 	console.log('error');
+            // });
+            // throw new Error('112');
+        </script>
+    </body>
+</html>
