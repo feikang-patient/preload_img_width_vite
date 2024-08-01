@@ -3,6 +3,7 @@ import type { RouteRecordRaw } from 'vue-router';
 import { userPermissionsStore } from '../stores/index';
 import { storeToRefs } from 'pinia';
 import HomeView from '../views/HomeView.vue';
+import PdfView from '../views/pdf/IndexView.vue';
 
 const UserDetails = () =>
     import(/* webpackChunkName: "group-user-details" */ '../views/UserDetails.vue');
@@ -20,6 +21,11 @@ const router = createRouter({
             component: HomeView
         },
         {
+            path: '/pdf',
+            name: 'pdf',
+            component: PdfView
+        },
+        {
             path: '/users',
             name: 'user-dashboard',
             component: UserDashboard
@@ -33,6 +39,11 @@ const router = createRouter({
             path: '/users/details/:id',
             name: 'user-details',
             component: UserDetails
+        },
+        {
+            path: '/word',
+            name: 'word',
+            component: () => import('../views/word/IndexView.vue')
         },
         {
             path: '/auth',

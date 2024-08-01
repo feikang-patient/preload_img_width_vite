@@ -36,6 +36,9 @@ export default defineConfig({
                     vue: ['vue'],
                     'vue-router': ['vue-router'],
                     about: ['./src/views/AboutView.vue'],
+                    // 'user-detail': ['./src/views/UserDetails.vue'],
+                    // 'user-dashboard': ['./src/views/UserDashboard.vue'],
+                    // 'user-edit': ['./src/views/UserProfileEdit.vue']
                     'group-user': [
                         './src/views/UserDetails.vue',
                         './src/views/UserDashboard.vue',
