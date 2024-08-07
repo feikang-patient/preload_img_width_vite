@@ -11,7 +11,9 @@ declare module 'vue' {
     Authority1: typeof import('./src/components/Authority1.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElOption: typeof import('element-plus/es')['ElOption']
+    ElPagination: typeof import('element-plus/es')['ElPagination']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
@@ -23,5 +25,8 @@ declare module 'vue' {
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     Watermark: typeof import('./src/components/Watermark.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

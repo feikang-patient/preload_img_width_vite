@@ -34,14 +34,15 @@ service.interceptors.response.use(
             const data = response.data;
             if (data.code === 401) {
                 window.location.href = '/login';
-                // ElMessage({
-                //     message: data.message,
-                //     type: 'error'
-                // });
                 // return Promise.reject(data);
             } else {
                 return data;
             }
+        } else {
+            ElMessage({
+                message: data.message,
+                type: 'error'
+            });
         }
         return response;
     },

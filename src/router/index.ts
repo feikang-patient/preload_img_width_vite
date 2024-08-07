@@ -41,6 +41,21 @@ const router = createRouter({
             component: UserDetails
         },
         {
+            path: '/todpf',
+            name: 'todpf',
+            component: () => import('../views/htmltopdf/IndexView.vue')
+        },
+        {
+            path: '/select',
+            name: 'select',
+            component: () => import('../views/select/IndexView.vue')
+        },
+        {
+            path: '/msg',
+            name: 'msg',
+            component: () => import('../views/msg/IndexView.vue')
+        },
+        {
             path: '/word',
             name: 'word',
             component: () => import('../views/word/IndexView.vue')

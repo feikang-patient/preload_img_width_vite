@@ -19,6 +19,8 @@
         "@vue-office/docx": "^1.6.2",
         "axios": "^1.7.2",
         "element-plus": "^2.7.7",
+        "html2canvas": "^1.4.1",
+        "jspdf": "^2.5.1",
         "less": "^4.2.0",
         "lodash": "^4.17.21",
         "lodash-es": "^4.17.21",
