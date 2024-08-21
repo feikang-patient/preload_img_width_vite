@@ -21,6 +21,16 @@ const router = createRouter({
             component: HomeView
         },
         {
+            path: '/terser',
+            name: 'terser',
+            component: () => import('../views/terser/index.vue')
+        },
+        {
+            path: '/pic',
+            name: 'pic',
+            component: () => import('../views/pic/Index.vue')
+        },
+        {
             path: '/pdf',
             name: 'pdf',
             component: PdfView
@@ -43,7 +53,7 @@ const router = createRouter({
         {
             path: '/todpf',
             name: 'todpf',
-            component: () => import('../views/htmltopdf/IndexView.vue')
+            component: () => import('../views/htmltopdf/A4Vue.vue')
         },
         {
             path: '/select',

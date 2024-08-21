@@ -982,12 +982,11 @@
 </template>
 
 <script>
-import { htmlToPdf } from '@/utils/htmlToPdf';
-
+import htmlPdf from '@/utils/html2pdf';
 export default {
     methods: {
-        async onExport() {
-            await htmlToPdf('pdf-dom', '报告');
+        onExport() {
+            htmlPdf.getPdf('test', document.querySelector('#print-zone'))
         }
     }
 };
