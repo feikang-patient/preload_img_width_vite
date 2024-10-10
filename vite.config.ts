@@ -41,7 +41,7 @@ const terserPlugin = (text: '') => {
 export default defineConfig({
     plugins: [
         vue(),
-        terserPlugin('大伟公司'),
+        // terserPlugin('大伟公司'),
         AutoImport({
             resolvers: [ElementPlusResolver()],
             dts: fileURLToPath(new URL('./auto-imports.d.ts', import.meta.url))
@@ -66,20 +66,19 @@ export default defineConfig({
         // emptyOutDir: true,
         rollupOptions: {
             output: {
-                manualChunks: {
-                    vue: ['vue'],
-                    'vue-router': ['vue-router'],
-                    about: ['./src/views/AboutView.vue'],
-                    // 'user-detail': ['./src/views/UserDetails.vue'],
-                    // 'user-dashboard': ['./src/views/UserDashboard.vue'],
-                    // 'user-edit': ['./src/views/UserProfileEdit.vue']
-                    terser: ['./src/views/terser/index.vue'],
-                    'group-user': [
-                        './src/views/UserDetails.vue',
-                        './src/views/UserDashboard.vue',
-                        './src/views/UserProfileEdit.vue'
-                    ]
+                entryFileNames: 'js/[name]-[hash].js',
+                chunkFileNames: 'js/[name]-[hash].js',
+                // 静态资源
+                assetFileNames: (assetInfo) => {
+                    if (assetInfo?.name?.endsWith('.css')) {
+                        return 'css/[name]-[hash][extname]';
+                    }
+                    if (assetInfo?.name?.endsWith('.png')) {
+                        return 'img/[name]-[hash][extname]';
+                    }
+                    return 'assets/[name]-[hash][extname]';
                 }
+                // assetFileNames: 'css/[name]-[hash][extname]'
             }
         }
     }
