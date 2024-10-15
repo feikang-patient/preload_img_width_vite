@@ -66,20 +66,20 @@ export default defineConfig({
         // emptyOutDir: true,
         rollupOptions: {
             output: {
-                entryFileNames: 'js/[name]-[hash].js',
-                chunkFileNames: 'js/[name]-[hash].js',
-                // 静态资源
-                assetFileNames: (assetInfo) => {
-                    if (assetInfo?.name?.endsWith('.css')) {
-                        return 'css/[name]-[hash][extname]';
-                    }
-                    if (assetInfo?.name?.endsWith('.png')) {
-                        return 'img/[name]-[hash][extname]';
-                    }
-                    return 'assets/[name]-[hash][extname]';
+                manualChunks: {
+                    lodash: ['lodash'],
+                    vue: ['vue', 'vue-router'],
+                    'element-plus': ['element-plus'],
+                    axios: ['axios'],
+                    'group-user': [
+                        './src/views/UserDetails.vue',
+                        './src/views/UserDashboard.vue',
+                        './src/views/UserProfileEdit.vue'
+                    ]
                 }
-                // assetFileNames: 'css/[name]-[hash][extname]'
             }
         }
     }
 });
+
+// rollup  esbuild 

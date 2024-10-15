@@ -26,6 +26,9 @@ importers:
       less:
         specifier: ^4.2.0
         version: 4.2.0
+      loadash:
+        specifier: ^1.0.0
+        version: 1.0.0
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -75,6 +78,9 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.7
         version: 21.1.7
+      '@types/lodash':
+        specifier: ^4.17.10
+        version: 4.17.10
       '@types/node':
         specifier: ^20.14.5
         version: 20.14.9
@@ -613,8 +619,8 @@ packages:
   '@types/lodash-es@4.17.12':
     resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
 
-  '@types/lodash@4.17.7':
-    resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
+  '@types/lodash@4.17.10':
+    resolution: {integrity: sha512-YpS0zzoduEhuOWjAotS6A5AVCva7X4lVlYLF0FYHAY9sdraBfnatttHItlWeZdGhuEkf+OzMNg2ZYAx8t+52uQ==}
 
   '@types/node@20.14.9':
     resolution: {integrity: sha512-06OCtnTXtWOZBJlRApleWndH4JsRVs1pDCc8dLSQp+7PpUpX3ePdHyeNSFTeSe7FtKyQkrlPvHwJOW3SLd8Oyg==}
@@ -1853,6 +1859,10 @@ packages:
     peerDependenciesMeta:
       enquirer:
         optional: true
+
+  loadash@1.0.0:
+    resolution: {integrity: sha512-xlX5HBsXB3KG0FJbJJG/3kYWCfsCyCSus3T+uHVu6QL6YxAdggmm3QeyLgn54N2yi5/UE6xxL5ZWJAAiHzHYEg==}
+    deprecated: Package is unsupport. Please use the lodash package instead.
 
   local-pkg@0.5.0:
     resolution: {integrity: sha512-ok6z3qlYyCDS4ZEU27HaU6x/xZa9Whf8jD4ptH5UZTQYZVYeb9bnZ3ojVhiJNLiXK1Hfc0GNbLXcmZ5plLDDBg==}
@@ -3362,9 +3372,9 @@ snapshots:
 
   '@types/lodash-es@4.17.12':
     dependencies:
-      '@types/lodash': 4.17.7
+      '@types/lodash': 4.17.10
 
-  '@types/lodash@4.17.7': {}
+  '@types/lodash@4.17.10': {}
 
   '@types/node@20.14.9':
     dependencies:
@@ -4104,7 +4114,7 @@ snapshots:
       '@element-plus/icons-vue': 2.3.1(vue@3.4.31(typescript@5.4.5))
       '@floating-ui/dom': 1.6.7
       '@popperjs/core': '@sxzz/popperjs-es@2.11.7'
-      '@types/lodash': 4.17.7
+      '@types/lodash': 4.17.10
       '@types/lodash-es': 4.17.12
       '@vueuse/core': 9.13.0(vue@3.4.31(typescript@5.4.5))
       async-validator: 4.2.5
@@ -4820,6 +4830,8 @@ snapshots:
       wrap-ansi: 7.0.0
     optionalDependencies:
       enquirer: 2.4.1
+
+  loadash@1.0.0: {}
 
   local-pkg@0.5.0:
     dependencies:

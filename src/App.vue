@@ -8,11 +8,7 @@ import { RouterLink, RouterView } from 'vue-router'
       <nav>
         <RouterLink to="/home">Home</RouterLink>
         <RouterLink to="/">About</RouterLink>
-        <RouterLink to="/auth">Auth权限</RouterLink>
-        <RouterLink to="/word">word文件预览</RouterLink>
-        <RouterLink to="/msg">组件封装-message</RouterLink>
-        <RouterLink to="/todpf">html-to-pdf</RouterLink>
-        <RouterLink to="/select">定制select下拉分页的功能</RouterLink>
+        <RouterLink to="/file">file223</RouterLink>
       </nav>
   </header>
   <RouterView />

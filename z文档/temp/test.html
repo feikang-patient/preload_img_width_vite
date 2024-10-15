@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>文件上传</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-ui@2.15.14/lib/theme-chalk/index.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/element-ui@2.15.14/lib/index.min.js"></script>
+    <!-- <script src="../js/jquery-1.11.0.js"></script> -->
+</head>
+<body>
+<div id="app">
+    <el-upload
+            class="upload-demo"
+            drag
+            ref="uploadRef"
+            action="http://localhost:8686/file/upload"
+            :on-remove="handleRemove"
+            :on-progress="handleProgress"
+            :on-change="handleChange"
+            :on-success="handleSuccess"
+            :on-error="handleError"
+            :file-list="fileList"
+            :auto-upload="false"
+            :show-file-list="true"
+            multiple>
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__text" style="margin-top: 10px">支持的文件类型：jpg、png、xml、word、pdf等，单个文件不超过1GB
+        </div>
+    </el-upload>
+    <div class="uploadBtn">
+        <el-button size="small" type="primary" @click="selectFile">选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="primary" @click="submitUpload">上传到服务器</el-button>
+    </div>
+    <div class="uploadTable">
+        <el-tag>文件数量：{{fileTableData.length}}个</el-tag>
+        <el-tag type="info">总大小：{{fileSizeSum}}M</el-tag>
+        <el-tag type="success">成功上传：{{fileSuccessCount}}个</el-tag>
+        <el-button type="danger" size="small" style="float: right" @click="clearTableData">清空上传列表</el-button>
+        <el-table ref="fileTableData" :data="fileTableData" :cell-style="{textAlign:'center'}" stripe>
+            <el-table-column prop="name" label="文件名"></el-table-column>
+            <el-table-column prop="type" label="类型" width="80"></el-table-column>
+            <el-table-column prop="sizeStr" label="大小"></el-table-column>
+            <el-table-column prop="status" label="状态" width="120">
+                <template slot-scope="scope">
+                    <el-tag v-if="scope.row.status=='ready'" size="mini">待上传</el-tag>
+                    <el-tag type="warning" v-else-if="scope.row.status==='uploading'" size="mini">上传中</el-tag>
+                    <el-tag type="danger" v-else-if="scope.row.status==='fail'" size="mini">上传失败</el-tag>
+                    <el-tag type="success" v-else-if="scope.row.status==='success'" size="mini">上传成功</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="进度" width="120">
+                <template slot-scope="scope">
+                    <el-progress :text-inside="true" :stroke-width="15" :percentage="scope.row.num"></el-progress>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button type="danger" class="el-icon-close" size="mini"
+                               :disabled="!(scope.row.status==='uploading')"
+                               @click="cancelUpload(scope.$index,scope.row)" title="取消上传"></el-button>
+                    <el-button type="danger" class="el-icon-delete" size="mini"
+                               @click="delFile(scope.$index,scope.row)" title="删除文件"></el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+</div>
+</body>
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                fileList: [],
+                fileTableData: [],
+                fileSizeSum: 0,
+                fileSuccessCount: 0,
+            }
+        },
+        watch: {
+            fileList(newList) {
+                this.fileTableData = [];
+                let fileSizeSum = 0;
+                newList.forEach(item => {
+                    let row = $.extend(true, {}, item);
+                    row.type = item.name.substring(item.name.lastIndexOf("."), item.name.length);
+                    row.sizeStr = Math.round(item.size / 1024) + 'KB';
+                    this.fileTableData.push(row);
+                    fileSizeSum += item.size;
+                })
+                this.fileSizeSum = Math.round(fileSizeSum / (1024 * 1024) * 100) / 100;
+            }
+        },
+        methods: {
+
+            /**
+             * 提交上传
+             */
+            submitUpload() {
+                if (this.fileList.length <= 0) {
+                    this.$message.warning("文件上传列表为空，请选择唔要上传的文件");
+                    return;
+                }
+                this.$refs.uploadRef.submit();
+            },
+            
+            handleChange(file, fileList) {
+                this.fileList = fileList;
+            },
+           
+            handleRemove(file, fileList) {
+                this.fileList = fileList;
+            },
+
+           
+            handleProgress(event, file, fileList) {
+                fileList.forEach(item => {
+                    if (file.uid === item.uid) {
+                        if (item.status != 'success' || item.status != 'fail') {
+                            let num = ((event.loaded / event.total) * 100) | 0; //重新计算上传百分比
+                            item.num = num;
+                            if (num == 100) {
+                                this.fileSuccessCount++;
+                            }
+                        }
+                    }
+                })
+                this.fileList = fileList;
+            },
+
+            handleSuccess(response, file, fileList) {
+                this.fileList = fileList;
+            },
+          
+            handleError(err, file, fileList) {
+                this.$message.error("服务器连接失败，请检查网络重新上传");
+            },
+
+            
+            selectFile() {
+                const fileInput = this.$refs.uploadRef.$el.querySelector('input[type=file]');
+                fileInput.click();
+            },
+           
+            clearTableData(fileList) {
+                this.fileList = [];
+                this.fileTableData = [];
+                this.fileSizeSum = 0;
+                this.fileSuccessCount = 0;
+            },
+           
+            cancelUpload(index, row) {
+                let afterFileList = this.fileList;
+                if (row.status === 'uploading') {
+                    console.info("取消上传：" + row.name);
+                    this.$refs.uploadRef.abort(row.raw);
+                    afterFileList.forEach(item => {
+                        if (item.uid === row.uid) {
+                            item.status = 'ready';
+                            //item.num = 0;//进度条归零
+                        }
+                    })
+                }
+                this.fileList = afterFileList;
+                this.setTableData(this.fileList);
+            },
+
+            
+            delFile(index, row) {
+                this.fileList.splice(index, 1);
+            },
+
+            
+            setTableData(newList) {
+                this.fileTableData = [];
+                let fileSizeSum = 0;
+                newList.forEach(item => {
+                    let row = $.extend(true, {}, item);
+                    row.type = item.name.substring(item.name.lastIndexOf("."), item.name.length);
+                    row.sizeStr = Math.round(item.size / 1024) + 'KB';
+                    this.fileTableData.push(row);
+                    fileSizeSum += item.size;
+                })
+                this.fileSizeSum = Math.round(fileSizeSum / (1024 * 1024) * 100) / 100;
+            },
+        }
+    });
+</script>
+<style>
+    .el-upload {
+        display: contents;
+    }
+
+    .el-upload-dragger {
+        width: 60%;
+        margin: auto;
+    }
+
+    .el-upload-list {
+        width: 60%;
+        margin: auto;
+    }
+
+    .uploadBtn {
+        width: 60%;
+        margin: 20px auto;
+    }
+
+    .uploadTable {
+        width: 60%;
+        margin: auto;
+    }
+
+    table th .cell {
+        color: #606266;
+        text-align: center;
+        font-size: 13px;
+    }
+
+
+    .el-badge__content.is-fixed.is-dot {
+        right: 5px;
+    }
+    .el-badge__content.is-dot {
+        height: 8px;
+        width: 8px;
+        padding: 0;
+        right: 0;
+        border-radius: 50%;
+    }
+    .el-badge__content.is-fixed {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        transform: translateY(-50%) translateX(100%);
+    }
+    .el-badge__content {
+        background-color: #f56c6c;
+        border-radius: 10px;
+        color: #fff;
+        display: inline-block;
+        font-size: 12px;
+        height: 18px;
+        line-height: 18px;
+        padding: 0 6px;
+        text-align: center;
+        white-space: nowrap;
+        border: 1px solid #fff;
+    }
+</style>
+</html>

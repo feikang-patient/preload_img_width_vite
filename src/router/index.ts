@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router';
 import { userPermissionsStore } from '../stores/index';
 import { storeToRefs } from 'pinia';
 import HomeView from '../views/HomeView.vue';
-import PdfView from '../views/pdf/IndexView.vue';
+// import FileView from '../views/File.vue';
 
 const UserDetails = () =>
     import(/* webpackChunkName: "group-user-details" */ '../views/UserDetails.vue');
@@ -16,24 +16,18 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
+            path: '/',
+            name: 'about',
+            meta: {
+                requireAuth: true, // 添加该字段，表示需要登录权限
+                roles: ['admin', 'user'] // 用户角色
+            },
+            component: () => import('../views/AboutView.vue')
+        },
+        {
             path: '/home',
             name: 'home',
             component: HomeView
-        },
-        {
-            path: '/terser',
-            name: 'terser',
-            component: () => import('../views/terser/index.vue')
-        },
-        {
-            path: '/pic',
-            name: 'pic',
-            component: () => import('../views/pic/Index.vue')
-        },
-        {
-            path: '/pdf',
-            name: 'pdf',
-            component: PdfView
         },
         {
             path: '/users',
@@ -49,43 +43,6 @@ const router = createRouter({
             path: '/users/details/:id',
             name: 'user-details',
             component: UserDetails
-        },
-        {
-            path: '/todpf',
-            name: 'todpf',
-            component: () => import('../views/htmltopdf/A4Vue.vue')
-        },
-        {
-            path: '/select',
-            name: 'select',
-            component: () => import('../views/select/IndexView.vue')
-        },
-        {
-            path: '/msg',
-            name: 'msg',
-            component: () => import('../views/msg/IndexView.vue')
-        },
-        {
-            path: '/word',
-            name: 'word',
-            component: () => import('../views/word/IndexView.vue')
-        },
-        {
-            path: '/auth',
-            name: 'auth',
-            component: () => import('../views/AuthView1.vue')
-        },
-        {
-            path: '/',
-            name: 'about',
-            meta: {
-                requireAuth: true, // 添加该字段，表示需要登录权限
-                roles: ['admin', 'user'] // 用户角色
-            },
-            // route level code-splitting
-            // this generates a separate chunk (About.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () => import('../views/AboutView.vue')
         }
     ]
 });
