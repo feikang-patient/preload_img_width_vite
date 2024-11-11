@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
 import { userPermissionsStore } from '../stores/index';
 import { storeToRefs } from 'pinia';
@@ -13,7 +13,8 @@ const UserProfileEdit = () =>
     import(/* webpackChunkName: "group-user-edit" */ '../views/UserProfileEdit.vue');
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    // history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHashHistory(),
     routes: [
         {
             path: '/',
@@ -23,6 +24,11 @@ const router = createRouter({
                 roles: ['admin', 'user'] // 用户角色
             },
             component: () => import('../views/AboutView.vue')
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: () => import('../views/LoginView.vue')
         },
         {
             path: '/home',

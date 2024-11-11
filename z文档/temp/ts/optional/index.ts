@@ -26,5 +26,8 @@ type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 type CreateUserOptions = Optional<User, 'address' | 'date' | 'status'>;
 
 function createUser(options: CreateUserOptions) {
-    // options.;
+    // options.
+    options.address;
+    options.date;
+    options.status;
 }

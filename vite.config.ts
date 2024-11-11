@@ -1,85 +1,60 @@
-import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { fileURLToPath, URL } from 'node:url';
+import { defineConfig, loadEnv } from 'vite';
+import vue from '@vitejs/plugin-vue';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
-
-import * as Babel from '@babel/core';
-import traverse from '@babel/traverse';
-import generate from '@babel/generator';
-
-const isSuff = (id: string) => {
-    if (id.endsWith('.vue')) {
-        return true;
-    } else {
-        return false;
-    }
-};
-const terserPlugin = (text: '') => {
-    return {
-        name: 'terserPlugin',
-        // vite插件里面有很多钩子，transform钩子就是用来做代码转换的
-        transform(code, id) {
-            // 我们要处理什么文件呢？ vue  ts js 文件
-            if (isSuff(id)) {
-                // console.log('id', id);
-                const { ast } = Babel.transformSync(code, {
-                    ast: true
-                });
-                traverse.default(ast, {
-                    StringLiteral(path) {
-                        console.log(path.node.value);
-                        // path.node.value = path.node.value + '大伟公司';
-                    }
-                });
-            }
-        }
-    };
-};
+import type { UserConfig, ConfigEnv } from 'vite';
 // https://vitejs.dev/config/
-export default defineConfig({
-    plugins: [
-        vue(),
-        // terserPlugin('大伟公司'),
-        AutoImport({
-            resolvers: [ElementPlusResolver()],
-            dts: fileURLToPath(new URL('./auto-imports.d.ts', import.meta.url))
-        }),
-        Components({
-            resolvers: [ElementPlusResolver()],
-            dts: fileURLToPath(new URL('./components.d.ts', import.meta.url)),
-            dirs: [fileURLToPath(new URL('./src/components', import.meta.url))]
-        })
-    ],
-    resolve: {
-        alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url)),
-            replacement: fileURLToPath(new URL('./src/components', import.meta.url))
-        }
-    },
-    server: {
-        port: 8081
-    },
-    build: {
-        // outDir: 'dist',
-        // emptyOutDir: true,
-        rollupOptions: {
-            output: {
-                manualChunks: {
-                    lodash: ['lodash'],
-                    vue: ['vue', 'vue-router'],
-                    'element-plus': ['element-plus'],
-                    axios: ['axios'],
-                    'group-user': [
-                        './src/views/UserDetails.vue',
-                        './src/views/UserDashboard.vue',
-                        './src/views/UserProfileEdit.vue'
-                    ]
+export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
+    // 获取当前工作目录
+    const root = process.cwd();
+    // 获取环境变量
+    const env = loadEnv(mode, root);
+    console.log(env);
+    return {
+        base: env.VITE_BASE_PUGLIC_URL,
+        plugins: [
+            vue(),
+            // terserPlugin('大伟公司'),
+            AutoImport({
+                resolvers: [ElementPlusResolver()],
+                dts: fileURLToPath(new URL('./auto-imports.d.ts', import.meta.url))
+            }),
+            Components({
+                resolvers: [ElementPlusResolver()],
+                dts: fileURLToPath(new URL('./components.d.ts', import.meta.url)),
+                dirs: [fileURLToPath(new URL('./src/components', import.meta.url))]
+            })
+        ],
+        resolve: {
+            alias: {
+                '@': fileURLToPath(new URL('./src', import.meta.url)),
+                replacement: fileURLToPath(new URL('./src/components', import.meta.url))
+            }
+        },
+        server: {
+            port: 8081
+        },
+        build: {
+            outDir: 'dist',
+            emptyOutDir: true,
+            rollupOptions: {
+                output: {
+                    entryFileNames: 'js/[name].js',
+                    chunkFileNames: 'js/[name].js',
+                    // 静态资源
+                    assetFileNames: (assetInfo) => {
+                        if (assetInfo?.name?.endsWith('.css')) {
+                            return 'css/[name].[hash].css';
+                        } else if (assetInfo?.name?.endsWith('.png')) {
+                            return 'img/[name].[hash].[ext]';
+                        } else if (assetInfo?.name?.endsWith('.jpg')) {
+                            return 'img/[name].[hash].[ext]';
+                        }
+                    }
                 }
             }
         }
-    }
+    };
 });
-
-// rollup  esbuild 
