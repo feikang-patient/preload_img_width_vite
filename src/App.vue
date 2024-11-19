@@ -8,7 +8,7 @@ import { RouterLink, RouterView } from 'vue-router'
       <nav>
         <RouterLink to="/home">Home</RouterLink>
         <RouterLink to="/">About</RouterLink>
-        <RouterLink to="/file">file223</RouterLink>
+        <RouterLink to="/img">图片预加载</RouterLink>
       </nav>
   </header>
   <RouterView />

@@ -3,14 +3,8 @@ import type { RouteRecordRaw } from 'vue-router';
 import { userPermissionsStore } from '../stores/index';
 import { storeToRefs } from 'pinia';
 import HomeView from '../views/HomeView.vue';
-// import FileView from '../views/File.vue';
-
-const UserDetails = () =>
-    import(/* webpackChunkName: "group-user-details" */ '../views/UserDetails.vue');
-const UserDashboard = () =>
-    import(/* webpackChunkName: "group-user-dashboard" */ '../views/UserDashboard.vue');
-const UserProfileEdit = () =>
-    import(/* webpackChunkName: "group-user-edit" */ '../views/UserProfileEdit.vue');
+// const UserDetails = () =>
+//     import(/* webpackChunkName: "group-user-details" */ '../views/UserDetails.vue');
 
 const router = createRouter({
     // history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,34 +20,14 @@ const router = createRouter({
             component: () => import('../views/AboutView.vue')
         },
         {
-            path: '/login',
-            name: 'login',
-            component: () => import('../views/LoginView.vue')
-        },
-        {
-            path: '/file',
-            name: 'file',
-            component: () => import('../views/FileView.vue')
+            path: '/img',
+            name: 'img',
+            component: () => import('../views/ImgView.vue')
         },
         {
             path: '/home',
             name: 'home',
             component: HomeView
-        },
-        {
-            path: '/users',
-            name: 'user-dashboard',
-            component: UserDashboard
-        },
-        {
-            path: '/users/edit/:id',
-            name: 'user-edit',
-            component: UserProfileEdit
-        },
-        {
-            path: '/users/details/:id',
-            name: 'user-details',
-            component: UserDetails
         }
     ]
 });

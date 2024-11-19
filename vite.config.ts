@@ -5,16 +5,23 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import type { UserConfig, ConfigEnv } from 'vite';
+import { preloadImagePlugin } from './src/plugins/preloadImagePlugin';
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     // 获取当前工作目录
     const root = process.cwd();
     // 获取环境变量
     const env = loadEnv(mode, root);
-    console.log(env);
+    console.log(env.VITE_BASE_PUGLIC_URL);
     return {
         base: env.VITE_BASE_PUGLIC_URL,
         plugins: [
+            preloadImagePlugin({
+                dir: '*.{jpg,png,svg}',
+                attrs: {
+                    rel: 'prefetch'
+                }
+            }),
             vue(),
             // terserPlugin('大伟公司'),
             AutoImport({
