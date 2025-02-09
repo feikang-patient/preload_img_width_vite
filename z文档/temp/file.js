@@ -1,13 +1,15 @@
-/**
- * @param {File} targetFile 目标上传文件
- * @param {number} baseChunkSize 上传分块大小，单位Mb
- * @param {string} uploadUrl 上传文件的后端接口地址
- * @param {string} vertifyUrl 验证文件上传的接口地址
- * @param {string} mergeUrl 请求进行文件合并的接口地址
- * @param {Function} progress_cb 更新上传进度的回调函数
- * @returns {Promise}
- */
+const { g } = require('vitest/dist/suite-IbNSsUWN.js');
 
+/**
+ *
+ *
+ * @param {*} file
+ * @param {*} baseChunkSize
+ * @param {*} uploadUrl
+ * @param {*} vertifyUrl
+ * @param {*} mergeUrl
+ * @param {*} progress_cb
+ */
 async function uploadFile(file, baseChunkSize, uploadUrl, vertifyUrl, mergeUrl, progress_cb) {
     //     1. 将文件进行分片并计算Hash值
     //            得到 allChunkList---所有分片   fileHash---文件的hash值
@@ -82,6 +84,8 @@ async function sliceFile(targetFile, baseChunkSize = 1) {
     });
 }
 
+// 切片的时候，  浏览器卡顿，  web-worker
+// 关闭浏览器，      blob ---- indexdb   判断上传了多少片！！
 async function uploadFile2(file, baseChunkSize, uploadUrl, vertifyUrl, mergeUrl, progress_cb) {
     const { chunkList, fileHash } = await sliceFile(file, baseChunkSize);
     //所有分片 ArrayBuffer[]
