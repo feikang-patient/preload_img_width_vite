@@ -25,6 +25,11 @@ const router = createRouter({
             component: () => import('../views/ImgView.vue')
         },
         {
+            path: '/3d',
+            name: '3d',
+            component: () => import('../views/3d.vue')
+        },
+        {
             path: '/home',
             name: 'home',
             component: HomeView

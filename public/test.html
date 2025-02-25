@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF AI阅读模式 Demo</title>
+    <style>
+        #pdf-viewer {
+            width: 80%;
+            height: 600px;
+            border: 1px solid #ccc;
+            margin: 20px auto;
+            overflow: auto;
+            padding: 10px;
+        }
+        #controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #explanation {
+            width: 80%;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        .text-layer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            opacity: 0.2;
+            line-height: 1.0;
+        }
+        .text-layer span {
+            color: transparent;
+            position: absolute;
+            white-space: pre;
+            cursor: text;
+            transform-origin: 0% 0%;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">PDF AI阅读模式 Demo</h1>
+    <div id="controls">
+        <input type="file" id="pdf-input" accept="application/pdf" />
+        <button id="copy-button">复制选中文本</button>
+        <button id="explain-button">AI解释选中文本</button>
+    </div>
+    <div id="pdf-viewer"></div>
+    <div id="explanation">
+        <h3>AI解释结果：</h3>
+        <p id="explanation-text"></p>
+    </div>
+    <!-- PDF.js 库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"></script> -->
+    <script>
+        const pdfViewer = document.getElementById('pdf-viewer');
+        const pdfInput = document.getElementById('pdf-input');
+
+        // 监听文件选择事件
+        pdfInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                loadPDF(file);
+            } else {
+                alert('请选择一个有效的PDF文件！');
+            }
+        });
+
+        // 加载并渲染PDF文件
+        function loadPDF(file) {
+            const fileReader = new FileReader();
+            fileReader.onload = function () {
+                console.log(this.result);
+                const typedArray = new Uint8Array(this.result);
+                renderPDF(typedArray);
+            };
+            fileReader.readAsArrayBuffer(file);
+        }
+
+        // 使用PDF.js渲染PDF为HTML
+        function renderPDF(data) {
+            pdfViewer.innerHTML = ''; // 清空之前的PDF内容
+            pdfjsLib.getDocument({ data }).promise.then(pdf => {
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    pdf.getPage(pageNum).then(page => {
+                        const scale = 1.5;
+                        const viewport = page.getViewport({ scale });
+
+                        // 创建页面容器
+                        const pageDiv = document.createElement('div');
+                        pageDiv.style.position = 'relative';
+                        pageDiv.style.width = `${viewport.width}px`;
+                        pageDiv.style.height = `${viewport.height}px`;
+                        pageDiv.style.margin = '0 auto 20px';
+                        pageDiv.style.border = '1px solid #ccc';
+
+                        // 创建Canvas用于渲染PDF背景
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        pageDiv.appendChild(canvas);
+
+                        // 创建文本层容器
+                        const textLayerDiv = document.createElement('div');
+                        textLayerDiv.className = 'text-layer';
+                        pageDiv.appendChild(textLayerDiv);
+
+                        // 渲染PDF页面
+                        const renderContext = {
+                            canvasContext: context,
+                            viewport: viewport
+                        };
+                        page.render(renderContext).promise.then(() => {
+                            // 提取文本层
+                            return page.getTextContent();
+                        }).then(textContent => {
+                            // 渲染文本层
+                            pdfjsLib.renderTextLayer({
+                                textContent: textContent,
+                                container: textLayerDiv,
+                                viewport: viewport,
+                                textDivs: []
+                            });
+                        });
+
+                        pdfViewer.appendChild(pageDiv);
+                    });
+                }
+            }).catch(error => {
+                console.error('加载PDF失败:', error);
+                alert('加载PDF失败，请检查文件格式！');
+            });
+        }
+
+        // 复制选中文本
+        document.getElementById('copy-button').addEventListener('click', () => {
+            const selectedText = window.getSelection().toString();
+            if (selectedText) {
+                navigator.clipboard.writeText(selectedText).then(() => {
+                    alert('文本已复制到剪贴板！');
+                }).catch(err => {
+                    console.error('复制失败:', err);
+                });
+            } else {
+                alert('请先选择文本！');
+            }
+        });
+
+        // AI解释选中文本
+        document.getElementById('explain-button').addEventListener('click', async () => {
+            const selectedText = window.getSelection().toString();
+            if (selectedText) {
+                try {
+                    // 调用AI解释API（假设后端API地址为 /api/explain）
+                    const response = await fetch('/api/explain', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ text: selectedText })
+                    });
+                    const data = await response.json();
+                    document.getElementById('explanation-text').innerText = data.explanation;
+                } catch (error) {
+                    console.error('AI解释失败:', error);
+                    alert('AI解释失败，请稍后重试！');
+                }
+            } else {
+                alert('请先选择文本！');
+            }
+        });
+    </script>
+</body>
+</html>

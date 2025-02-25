@@ -25,16 +25,19 @@ export async function preloadImages(max = 3) {
             setTimeout(resolve, 10000);
         });
     }
-    function _load() {
-        preloadImage().finally(() => {
-            if (images.length > 0) {
-                _load();
-            }
-        });
-    }
+    // function _load() {
+    //     preloadImage().finally(() => {
+    //         if (images.length > 0) {
+    //             _load();
+    //         }
+    //     });
+    // }
 
-    for (let i = 0; i < max; i++) {
-        // preloadImage();
-        _load();
+    // for (let i = 0; i < max; i++) {
+    //     preloadImage();
+    //     _load();
+    // }
+    for (let i = 0; i < 9; i++) {
+        preloadImage();
     }
 }

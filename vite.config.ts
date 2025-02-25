@@ -12,8 +12,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     const root = process.cwd();
     // 获取环境变量
     const env = loadEnv(mode, root);
-    console.log(env.VITE_BASE_PUGLIC_URL);
+    // console.log(env.VITE_BASE_PUGLIC_URL);
     return {
+        // publicDir: 'test',
         base: env.VITE_BASE_PUGLIC_URL,
         plugins: [
             preloadImagePlugin({
