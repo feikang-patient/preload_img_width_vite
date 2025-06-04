@@ -24,7 +24,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
                 }
             }),
             vue(),
-            // terserPlugin('大伟公司'),
             AutoImport({
                 resolvers: [ElementPlusResolver()],
                 dts: fileURLToPath(new URL('./auto-imports.d.ts', import.meta.url))
